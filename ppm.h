@@ -36,7 +36,7 @@ image *ppm_read_image(char *path) {
     }
     fread(img->img, height * width * 3, 1, in);
     fclose(in);
-#pragma omp parallel for collapse(2) shared(img, height, width, l_maxval) default(none)
+#pragma omp parallel for schedule(static) collapse(2) shared(img, height, width, l_maxval) default(none)
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
             image_r(img, i, j) = ((unsigned int) image_r(img, i, j)) * 255 / l_maxval;

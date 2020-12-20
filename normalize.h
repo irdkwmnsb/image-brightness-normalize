@@ -22,7 +22,7 @@ void normalize(image *img) {
     // find max and min values of y
     float (*ys)[img->width][img->height] = malloc(sizeof(float[img->width][img->height]));
     float max_y = 0, min_y = 255;
-#pragma omp parallel for collapse(2) default(none) shared(ys, img) reduction(min:min_y) reduction(max:max_y)
+#pragma omp parallel for schedule(static) collapse(2) default(none) shared(ys, img) reduction(min:min_y) reduction(max:max_y)
     for (int x = 0; x < img->width; x++) {
         for (int y = 0; y < img->height; y++) {
             float r = image_r(img, x, y), g = image_g(img, x, y), b = image_b(img, x, y);
@@ -35,10 +35,9 @@ void normalize(image *img) {
             min_y = fminf(min_y, yy);
         }
     }
-    fprintf(stderr, "min=%f, max=%f\n", min_y, max_y);
     const float new_min = 16;
     const float new_max = 240;
-#pragma omp parallel for collapse(2) default(none) shared(ys, max_y, min_y, img, new_max, new_min)
+#pragma omp parallel for schedule(static) collapse(2) default(none) shared(ys, max_y, min_y, img, new_max, new_min)
     for (int x = 0; x < img->width; x++) {
         for (int y = 0; y < img->height; y++) {
             float r = image_r(img, x, y), g = image_g(img, x, y), b = image_b(img, x, y);
