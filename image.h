@@ -5,6 +5,8 @@
 #ifndef HW5_IMAGE_H
 #define HW5_IMAGE_H
 
+#include <stdlib.h>
+
 typedef struct {
     unsigned int width;
     unsigned int height;
