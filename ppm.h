@@ -49,10 +49,14 @@ image *ppm_read_image(char *path) {
 
 int ppm_write_image(image *img, char *p) {
     FILE *out = fopen(p, "wb");
+    if (out == NULL) {
+        ppm_error_message = "Cannot open file for writing";
+        return 0;
+    }
     fprintf(out, "P6\n%d %d\n255\n", img->width, img->height);
     fwrite(img->img, img->width * img->height * 3, 1, out);
     fclose(out);
-    return 0;
+    return 1;
 }
 
 #endif

@@ -6,48 +6,41 @@
 #include <sys/timeb.h>
 
 int main(int argc, char *argv[]) {
-    if (argc != 2) {
+    if (argc != 4) {
         fputs("Usage: ", stderr);
         fputs(argv[0], stderr);
-        fputs(" [filename]", stderr);
+        fputs(" <threads> <input> <output>", stderr);
         return -1;
     }
-    char *repeat = getenv("HW5_REPEAT");
-    int repeat_n = 1;
-    if (repeat) {
-        repeat_n = (int) strtol(repeat, (char **) (repeat + strlen(repeat)), 10);
-        fprintf(stderr, "Calculating %d time(s)\n", repeat_n);
+    char *endptr;
+    errno = 0;
+    long threads_n = strtol(argv[1], &endptr, 10);
+    if (endptr != argv[1] + strlen(argv[1]) || errno == ERANGE) {
+        fputs("Number of threads must be an integer", stderr);
+        return -1;
     }
-    image *img = ppm_read_image(argv[1]);
-    //    image *img = ppm_read_image("im/in3.ppm");
+
+    image *img = ppm_read_image(argv[2]);
     if (img == NULL) {
         fputs(ppm_error_message, stderr);
         return -1;
     }
-    int is_benchmark = getenv("HW5_BENCHMARK") != NULL;
-    for (int threads_n = 1; threads_n < omp_get_num_procs() + 3; threads_n++) {
-        if (!is_benchmark) {
-            threads_n = omp_get_num_procs();
-        }
-        omp_set_num_threads(threads_n);
-        struct timeb start, end;
-        ftime(&start);
 
-        for (int i = 0; i < repeat_n; i++)
-            normalize(img);
+    omp_set_num_threads(threads_n);
+    struct timeb start, end;
+    ftime(&start);
+    normalize(img);
+    ftime(&end);
 
-        ftime(&end);
+    long long ns_start = (long long) start.millitm + start.time * 1000;
+    long long ns_end = (long long) end.millitm + end.time * 1000;
+    printf("Time (%ld thread(s)) - %fms\n",
+           threads_n, ((float) (ns_end - ns_start)));
 
-        long long ns_start = (long long) start.millitm + start.time * 1000;
-        long long ns_end = (long long) end.millitm + end.time * 1000;
-        printf("Time (%i thread(s)) - %.4fms on average (%d times)\n",
-               threads_n, ((float) (ns_end - ns_start)) / (float) repeat_n, repeat_n);
-        fflush(stdout);
-        if (!is_benchmark) {
-            break;
-        }
+    if (!ppm_write_image(img, argv[3])) {
+        fputs(ppm_error_message, stderr);
+        return -1;
     }
-    ppm_write_image(img, "out.ppm");
     image_destruct_image(img);
     return 0;
 }
