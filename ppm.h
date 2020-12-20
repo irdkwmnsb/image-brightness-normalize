@@ -1,3 +1,7 @@
+//
+// Created by me on 20.12.2020.
+//
+
 #ifndef HW5_PPM_H
 #define HW5_PPM_H
 
@@ -11,7 +15,7 @@
 char *ppm_error_message = NULL;
 
 image *ppm_read_image(char *path) {
-    FILE *in = fopen(path, "r");
+    FILE *in = fopen(path, "rb");
     if (in == NULL) {
         ppm_error_message = "Could not open image";
         return NULL;
@@ -44,7 +48,7 @@ image *ppm_read_image(char *path) {
 }
 
 int ppm_write_image(image *img, char *p) {
-    FILE *out = fopen(p, "w");
+    FILE *out = fopen(p, "wb");
     fprintf(out, "P6\n%d %d\n255\n", img->width, img->height);
     fwrite(img->img, img->width * img->height * 3, 1, out);
     fclose(out);

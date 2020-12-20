@@ -14,6 +14,4 @@ else()
     message(FATAL_ERROR "OpenMP is not found!")
 endif ()
 
-add_compile_options(-fopenmp)
-
-add_executable(hw5 main.c ppm.h image.h normalize.h)
+add_executable(hw5 main.c)

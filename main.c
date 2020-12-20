@@ -28,9 +28,15 @@ int main(int argc, char *argv[]) {
     omp_set_num_threads(threads_n);
 
     // read first pixel for debug purposes
-//    unsigned char (*img_data)[img->height][img->width][3] = (void *) img->img;
-//    int x = 94, y = 94;
-//    printf("%d %d %d\n", (*img_data)[x][y][0], (*img_data)[x][y][1], (*img_data)[x][y][2]);
+    printf("%d %d\n", img->height, img->width);
+    //    unsigned char (*img_data)[img->height][img->width][3] = (void *) img->img;
+    //    int x = 94, y = 94;
+    //    printf("%d %d %d\n", (*img_data)[x][y][0], (*img_data)[x][y][1], (*img_data)[x][y][2]);
+    printf("%d %d %d", image_r(img, 0, 0), image_g(img, 0, 0), image_b(img, 0, 0));
+    for (int i = 0; i < 10; i++) {
+        printf("%d ", img->img[i]);
+    }
+    printf("\n");
     struct timeb start, end;
     ftime(&start);
 
