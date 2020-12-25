@@ -37,8 +37,6 @@ int main(int argc, char *argv[]) {
     long long ns_end = (long long) end.millitm + end.time * 1000;
     printf("Time (%ld thread(s)) - %fms\n",
            threads_n, ((float) (ns_end - ns_start)));
-//    printf("%f\n",
-//           threads_n, ((float) (ns_end - ns_start)));
 
     if (!ppm_write_image(img, argv[3])) {
         fputs(ppm_error_message, stderr);
