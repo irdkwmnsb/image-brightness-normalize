@@ -3,7 +3,9 @@
 #include <stdio.h>
 #include <omp.h>
 #include <stdlib.h>
+#include <errno.h>
 #include <sys/timeb.h>
+#include <string.h>
 
 int main(int argc, char *argv[]) {
     if (argc != 4) {
